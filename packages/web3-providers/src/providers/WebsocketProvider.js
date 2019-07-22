@@ -27,12 +27,14 @@ export default class WebsocketProvider extends AbstractSocketProvider {
     /**
      * @param {WebSocket} connection
      * @param {Number} timeout
+     * @param {Number} reconnectionTimeout
      *
      * @constructor
      */
-    constructor(connection, timeout) {
+    constructor(connection, reconnectionTimeout = 5000, timeout) {
         super(connection, timeout);
         this.host = this.connection.url;
+        this.reconnectionTimeout = reconnectionTimeout;
     }
 
     /**
@@ -106,7 +108,8 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.connection = connection;
             this.registerEventListeners();
-        }, 5000);
+            this.emit('reconnected');
+        }, this.reconnectionTimeout);
     }
 
     /**
