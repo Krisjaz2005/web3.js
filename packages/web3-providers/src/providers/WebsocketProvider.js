@@ -108,7 +108,9 @@ export default class WebsocketProvider extends AbstractSocketProvider {
 
             this.connection = connection;
             this.registerEventListeners();
-            this.emit('reconnected');
+            this.once('connect', () => {
+                this.emit('reconnected');
+            });
         }, this.reconnectionTimeout);
     }
 
